@@ -35,6 +35,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   
+  # Image picker for selecting images from device (mobile)
+  image_picker: ^1.0.4
+  
+  # File picker for all platforms (mobile, desktop, web)
+  file_picker: ^8.0.0+1
+  
+  # Path provider for accessing device directories
+  path_provider: ^2.1.1
+  
   # Add local image_builder dependency
   image_builder:
     path: ../

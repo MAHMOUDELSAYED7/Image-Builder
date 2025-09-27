@@ -262,6 +262,40 @@ class ImageGallery extends StatelessWidget {
 }
 ```
 
+## 🎮 Interactive Example App
+
+The package includes a comprehensive example app that demonstrates all features including **device image upload functionality**:
+
+- **Gallery Selection**: Pick images from your device's photo library
+- **Camera Capture**: Take new photos directly from the camera
+- **Cross-Platform**: Works on iOS, Android, macOS, and other Flutter-supported platforms
+- **Real-time Preview**: See ImageBuilder.file() in action with your own images
+
+To run the example app:
+
+```bash
+cd example
+flutter run
+```
+
+The example app showcases:
+- Network image loading with adaptive indicators
+- SVG rendering with color customization  
+- Memory image display from asset bytes (using `photo.jpg`)
+- **Cross-platform file picker** using ImageBuilder.file() (works on Mobile, Desktop & Web)
+- **Device image upload** using ImageBuilder.file() (gallery/camera selection for mobile)
+- Error handling and fallback widgets
+- All supported image formats
+
+**Platform Support**:
+- **Mobile (iOS/Android)**: Gallery selection using ImageBuilder.file()
+- **Desktop (macOS/Windows/Linux)**: Native file picker using ImageBuilder.file()
+- **Web**: File selection with automatic fallback to ImageBuilder.memory()
+
+**Smart Platform Detection**: The example app automatically shows the appropriate UI based on your platform - file picker on desktop/web or gallery selection on mobile.
+
+Perfect for testing the package capabilities and understanding implementation patterns!
+
 ## 📖 API Reference
 
 ### ImageBuilder Constructors
@@ -396,6 +430,56 @@ Run tests with:
 ```bash
 flutter test
 ```
+
+## 🔧 Troubleshooting
+
+### Example App Issues
+
+If you encounter compilation issues with the example app:
+
+**Android NDK Version Error:**
+```
+Plugin requires Android NDK 27.0.12077973
+```
+
+**Solution:** Update `android/app/build.gradle.kts`:
+```kotlin
+android {
+    ndkVersion = "27.0.12077973"
+    // ... other config
+}
+```
+
+**File Picker Plugin Warnings:**
+```
+Package file_picker:* references file_picker:* as the default plugin...
+```
+
+**Solution:** These are warnings and don't affect functionality. The app will work correctly.
+
+**Network Images Not Loading on Android:**
+```
+Network images fail to load on Android
+```
+
+**Solution:** Ensure network permissions are added to `android/app/src/main/AndroidManifest.xml`:
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+```
+
+**General Build Issues:**
+```bash
+flutter clean
+flutter pub get
+```
+
+### Platform-Specific Notes
+
+- **Web**: File operations automatically use `ImageBuilder.memory()` fallback
+- **Desktop**: Requires system file dialog permissions
+- **Mobile**: Requires camera/gallery permissions in Info.plist/AndroidManifest.xml
+- **Android**: Requires internet permissions for network image loading
 
 ## 🤝 Contributing
 
