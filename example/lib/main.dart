@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_builder/image_builder.dart';
 
 void main() {
@@ -32,6 +33,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /// Helper method to load asset as bytes for memory image demonstration
+  Future<Uint8List> _loadAssetAsBytes(String assetPath) async {
+    final byteData = await rootBundle.load(assetPath);
+    return byteData.buffer.asUint8List();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,6 +188,48 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ],
+            ),
+
+            const SizedBox(height: 32),
+            
+            _buildSectionHeader('Memory Images'),
+            const SizedBox(height: 16),
+            _buildTestCase(
+              'Image from Memory Bytes',
+              FutureBuilder<Uint8List>(
+                future: _loadAssetAsBytes('assets/images/file_formats.jpg'),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ImageBuilder.memory(
+                      snapshot.data!,
+                      width: 200,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    );
+                  } else if (snapshot.hasError) {
+                    return Container(
+                      width: 200,
+                      height: 150,
+                      color: Colors.red[100],
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error, color: Colors.red),
+                          Text('Failed to load memory image'),
+                        ],
+                      ),
+                    );
+                  }
+                  return Container(
+                    width: 200,
+                    height: 150,
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                },
+              ),
             ),
 
             const SizedBox(height: 32),

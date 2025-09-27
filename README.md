@@ -1,12 +1,14 @@
 # ImageBuilder
 
-A comprehensive Flutter package for handling various image types including network images, SVGs, and local assets with advanced caching, platform-adaptive loading indicators, and robust error handling.
+A comprehensive Flutter package for handling various image types including network images, SVGs, local assets, file images, and memory images with advanced caching, platform-adaptive loading indicators, and robust error handling.
 
 ## ✨ Features
 
 - 🖼️ **Multi-format support**: PNG, JPG, JPEG, WEBP, SVG
 - 🌐 **Network image loading**: Built-in caching with CachedNetworkImage
 - 📱 **Local asset support**: Seamless integration with Flutter assets
+- 📁 **File image support**: Load images directly from device files
+- 💾 **Memory image support**: Display images from Uint8List byte data
 - 🎨 **SVG customization**: Color tinting and scaling for vector graphics
 - ⚡ **Robust error handling**: Graceful fallbacks and custom error widgets
 - 🔄 **Platform-adaptive loading**: 
@@ -15,7 +17,7 @@ A comprehensive Flutter package for handling various image types including netwo
 - 🎯 **Loading color customization**: Custom colors for loading indicators
 - 📏 **Flexible sizing**: Individual width/height or unified size parameter
 - 🛡️ **Production-ready**: Comprehensive error handling prevents crashes
-- 🧪 **Well-tested**: Extensive test suite with 14+ test cases
+- 🧪 **Well-tested**: Extensive test suite with 19+ test cases
 
 ## 📦 Installation
 
@@ -76,6 +78,36 @@ ImageBuilder(
   'assets/icons/heart.svg',
   size: 24,
   color: Colors.red, // Apply red tint to SVG
+)
+```
+
+### 📁 File Images
+
+```dart
+import 'dart:io';
+
+// Display image from device file
+final File imageFile = File('/path/to/image.jpg');
+ImageBuilder.file(
+  imageFile,
+  width: 200,
+  height: 150,
+  fit: BoxFit.cover,
+)
+```
+
+### 💾 Memory Images
+
+```dart
+import 'dart:typed_data';
+
+// Display image from memory bytes
+final Uint8List imageBytes = await getImageBytes();
+ImageBuilder.memory(
+  imageBytes,
+  width: 200,
+  height: 150,
+  fit: BoxFit.cover,
 )
 ```
 
@@ -202,11 +234,27 @@ class ImageGallery extends StatelessWidget {
                 child: Icon(Icons.broken_image, size: 50),
               ),
             ),
+
+            SizedBox(height: 20),
+            
+            // File image
+            ImageBuilder.file(
+              File('/path/to/device/image.jpg'),
+              width: 200,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
+
+            SizedBox(height: 20),
+            
+            // Memory image
+            ImageBuilder.memory(
+              imageBytes, // Uint8List
+              width: 200,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
           ],
-        ),
-      ),
-    );
-            ],
         ),
       ),
     );
@@ -216,14 +264,52 @@ class ImageGallery extends StatelessWidget {
 
 ## 📖 API Reference
 
-### ImageBuilder Constructor
+### ImageBuilder Constructors
 
-The main widget for displaying images from various sources.
+The ImageBuilder widget provides multiple constructors for different image sources.
 
-**Constructor:**
+#### Default Constructor (Path-based)
 ```dart
 ImageBuilder(
   String path, {
+  Key? key,
+  double? width,
+  double? height,
+  double? size,
+  Color? color,
+  BoxFit fit = BoxFit.contain,
+  Widget? placeholder,
+  Widget? errorWidget,
+  Duration? maxCacheAge,
+  int? maxCacheSizeBytes,
+  bool useAdaptiveLoading = true,
+  Color? loadingColor,
+})
+```
+
+#### File Constructor
+```dart
+ImageBuilder.file(
+  File file, {
+  Key? key,
+  double? width,
+  double? height,
+  double? size,
+  Color? color,
+  BoxFit fit = BoxFit.contain,
+  Widget? placeholder,
+  Widget? errorWidget,
+  Duration? maxCacheAge,
+  int? maxCacheSizeBytes,
+  bool useAdaptiveLoading = true,
+  Color? loadingColor,
+})
+```
+
+#### Memory Constructor
+```dart
+ImageBuilder.memory(
+  Uint8List bytes, {
   Key? key,
   double? width,
   double? height,
@@ -243,7 +329,9 @@ ImageBuilder(
 
 | Parameter | Type | Description | Default |
 |-----------|------|-------------|---------|
-| `path` | `String` | **Required.** Image path or URL (network, asset, or local) | - |
+| `path` | `String` | **Required for default constructor.** Image path or URL (network, asset, or local) | - |
+| `file` | `File` | **Required for file constructor.** File object to load image from | - |
+| `bytes` | `Uint8List` | **Required for memory constructor.** Image data as bytes | - |
 | `width` | `double?` | Image width in logical pixels (ignored if `size` provided) | `null` |
 | `height` | `double?` | Image height in logical pixels (ignored if `size` provided) | `null` |
 | `size` | `double?` | Sets both width and height to same value | `null` |
@@ -279,7 +367,7 @@ ImageBuilder(
 | Platform | Adaptive Loading | Network Images | Local Assets | SVG Support |
 |----------|------------------|----------------|--------------|-------------|
 | **iOS** | ✅ Cupertino | ✅ | ✅ | ✅ |
-| **macOS** | ✅ Cupertino | ✅* | ✅ | ✅ |
+| **macOS** | ✅ Cupertino | ✅ | ✅ | ✅ |
 | **Android** | ✅ Material | ✅ | ✅ | ✅ |
 | **Web** | ✅ Material | ✅ | ✅ | ✅ |
 | **Windows** | ✅ Material | ✅ | ✅ | ✅ |

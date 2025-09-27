@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,10 +9,16 @@ import 'package:flutter_svg/svg.dart';
 import 'logger.dart';
 
 /// A versatile image widget builder that handles various image types including
-/// network images, SVGs, and local assets with caching and error handling.
+/// network images, SVGs, local assets, file images, and memory images with caching and error handling.
 class ImageBuilder extends StatelessWidget {
-  /// The image path or URL
-  final String path;
+  /// The image path or URL (for network and asset images)
+  final String? path;
+
+  /// File object for file-based images
+  final File? file;
+
+  /// Memory bytes for memory-based images  
+  final Uint8List? bytes;
 
   /// The width of the image (ignored if [size] is provided)
   final double? width;
@@ -54,13 +62,13 @@ class ImageBuilder extends StatelessWidget {
     caseSensitive: false,
   );
 
-  /// Creates an ImageBuilder widget.
+  /// Creates an ImageBuilder widget from a path (network URL or asset path).
   ///
   /// The [path] can be:
   /// - A network URL (http:// or https://)
   /// - A local asset path (for SVG, PNG, JPG, JPEG, WEBP files)
   const ImageBuilder(
-    this.path, {
+    String this.path, {
     super.key,
     this.width,
     this.height,
@@ -73,7 +81,48 @@ class ImageBuilder extends StatelessWidget {
     this.maxCacheSizeBytes,
     this.useAdaptiveLoading = true,
     this.loadingColor,
-  });
+  })  : file = null,
+        bytes = null;
+
+  /// Creates an ImageBuilder widget from a File object.
+  ///
+  /// The [file] should be a valid image file (PNG, JPG, JPEG, WEBP).
+  const ImageBuilder.file(
+    this.file, {
+    super.key,
+    this.width,
+    this.height,
+    this.size,
+    this.color,
+    this.fit = BoxFit.contain,
+    this.placeholder,
+    this.errorWidget,
+    this.maxCacheAge,
+    this.maxCacheSizeBytes,
+    this.useAdaptiveLoading = true,
+    this.loadingColor,
+  })  : path = null,
+        bytes = null;
+
+  /// Creates an ImageBuilder widget from memory bytes.
+  ///
+  /// The [bytes] should contain valid image data (PNG, JPG, JPEG, WEBP).
+  const ImageBuilder.memory(
+    this.bytes, {
+    super.key,
+    this.width,
+    this.height,
+    this.size,
+    this.color,
+    this.fit = BoxFit.contain,
+    this.placeholder,
+    this.errorWidget,
+    this.maxCacheAge,
+    this.maxCacheSizeBytes,
+    this.useAdaptiveLoading = true,
+    this.loadingColor,
+  })  : path = null,
+        file = null;
 
   /// Creates a platform-adaptive loading indicator
   /// iOS/macOS: CupertinoActivityIndicator
@@ -106,11 +155,81 @@ class ImageBuilder extends StatelessWidget {
     final effectiveWidth = size ?? width;
     final effectiveHeight = size ?? height;
 
-    if (path.startsWith('http://') || path.startsWith('https://')) {
+    // Handle file images
+    if (file != null) {
+      return _buildFileImage(effectiveWidth, effectiveHeight);
+    }
+
+    // Handle memory images
+    if (bytes != null) {
+      return _buildMemoryImage(effectiveWidth, effectiveHeight);
+    }
+
+    // Handle path-based images (network and assets)
+    if (path != null) {
+      return _buildPathImage(path!, effectiveWidth, effectiveHeight);
+    }
+
+    // If none of the image sources are provided, show error
+    return errorWidget ?? const Icon(Icons.error);
+  }
+
+  /// Build image from file
+  Widget _buildFileImage(double? width, double? height) {
+    return Image.file(
+      file!,
+      width: width,
+      height: height,
+      fit: fit,
+      color: color,
+      errorBuilder: (context, error, stackTrace) {
+        try {
+          _logger.error(
+            'Failed to load file image: ${file!.path}',
+            tag: 'ImageBuilder',
+            error: error,
+            stackTrace: null, // Avoid generating stack trace in error handlers
+          );
+        } catch (loggingError) {
+          // If logging fails, continue without logging to prevent cascade errors
+        }
+        return errorWidget ?? const Icon(Icons.error);
+      },
+    );
+  }
+
+  /// Build image from memory bytes
+  Widget _buildMemoryImage(double? width, double? height) {
+    return Image.memory(
+      bytes!,
+      width: width,
+      height: height,
+      fit: fit,
+      color: color,
+      errorBuilder: (context, error, stackTrace) {
+        try {
+          _logger.error(
+            'Failed to load memory image',
+            tag: 'ImageBuilder',
+            error: error,
+            stackTrace: null, // Avoid generating stack trace in error handlers
+          );
+        } catch (loggingError) {
+          // If logging fails, continue without logging to prevent cascade errors
+        }
+        return errorWidget ?? const Icon(Icons.error);
+      },
+    );
+  }
+
+  /// Build image from path (network or asset)
+  Widget _buildPathImage(String imagePath, double? width, double? height) {
+    // Handle network images
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return CachedNetworkImage(
-        imageUrl: path,
-        width: effectiveWidth,
-        height: effectiveHeight,
+        imageUrl: imagePath,
+        width: width,
+        height: height,
         fit: fit,
         color: color,
         placeholder: (context, url) => placeholder ?? 
@@ -133,13 +252,19 @@ class ImageBuilder extends StatelessWidget {
       );
     }
 
-    final match = _extensionRegex.firstMatch(path);
+    // Handle local asset images
+    return _buildAssetImage(imagePath, width, height);
+  }
+
+  /// Build asset image (SVG or regular assets)
+  Widget _buildAssetImage(String imagePath, double? width, double? height) {
+    final match = _extensionRegex.firstMatch(imagePath);
     final extension = match?.group(1)?.toLowerCase();
 
     if (extension == null) {
       try {
         _logger.error(
-          'Invalid image path: $path',
+          'Invalid image path: $imagePath',
           tag: 'ImageBuilder',
           error: Exception('No valid file extension found'),
           stackTrace: null, // Avoid generating stack trace in error handlers
@@ -150,72 +275,49 @@ class ImageBuilder extends StatelessWidget {
       return errorWidget ?? const Icon(Icons.error);
     }
 
+    // Handle SVG files
     if (extension == 'svg') {
-      try {
-        return SvgPicture.asset(
-          path,
-          width: effectiveWidth,
-          height: effectiveHeight,
-          fit: fit,
-          colorFilter:
-              color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
-        );
-      } catch (e) {
-        try {
-          _logger.error(
-            'Failed to load SVG asset: $path',
-            tag: 'ImageBuilder',
-            error: e,
-            stackTrace: null, // Avoid passing stack traces in web environment
-          );
-        } catch (loggingError) {
-          // If logging fails, continue without logging to prevent cascade errors
-        }
-        return errorWidget ?? const Icon(Icons.error);
-      }
+      return SvgPicture.asset(
+        imagePath,
+        width: width,
+        height: height,
+        fit: fit,
+        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        placeholderBuilder: (context) => placeholder ?? 
+            Center(child: useAdaptiveLoading 
+                ? _buildAdaptiveLoadingIndicator() 
+                : CircularProgressIndicator(color: loadingColor)),
+      );
     }
 
+    // Handle raster image files
     if (['png', 'jpg', 'jpeg', 'webp'].contains(extension)) {
-      try {
-        return Image.asset(
-          path,
-          width: effectiveWidth,
-          height: effectiveHeight,
-          fit: fit,
-          color: color,
-          filterQuality: FilterQuality.medium,
-          errorBuilder: (context, error, stackTrace) {
-            try {
-              _logger.error(
-                'Failed to load image asset: $path',
-                tag: 'ImageBuilder',
-                error: error,
-                stackTrace: null, // Avoid passing stack traces in web environment
-              );
-            } catch (loggingError) {
-              // If logging fails, continue without logging to prevent cascade errors
-            }
-            return errorWidget ?? const Icon(Icons.error);
-          },
-        );
-      } catch (e) {
-        try {
-          _logger.error(
-            'Failed to load image asset: $path',
-            tag: 'ImageBuilder',
-            error: e,
-            stackTrace: null, // Avoid passing stack traces in web environment
-          );
-        } catch (loggingError) {
-          // If logging fails, continue without logging to prevent cascade errors
-        }
-        return errorWidget ?? const Icon(Icons.error);
-      }
+      return Image.asset(
+        imagePath,
+        width: width,
+        height: height,
+        fit: fit,
+        color: color,
+        errorBuilder: (context, error, stackTrace) {
+          try {
+            _logger.error(
+              'Failed to load asset image: $imagePath',
+              tag: 'ImageBuilder',
+              error: error,
+              stackTrace: null, // Avoid generating stack trace in error handlers
+            );
+          } catch (loggingError) {
+            // If logging fails, continue without logging to prevent cascade errors
+          }
+          return errorWidget ?? const Icon(Icons.error);
+        },
+      );
     }
 
+    // Unsupported file format
     try {
       _logger.error(
-        'Unsupported image format: $extension for path: $path',
+        'Unsupported image format: $extension for path: $imagePath',
         tag: 'ImageBuilder',
         error: UnsupportedError('Unsupported image format: $extension'),
         stackTrace: null, // Avoid generating stack trace in error handlers
