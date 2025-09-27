@@ -147,6 +147,8 @@ ImageBuilder(
         Icon(Icons.error, color: Colors.red),
         Text('Failed to load image'),
       ],
+    ),
+  ),
 )
 ```
 
@@ -204,10 +206,11 @@ class ImageGallery extends StatelessWidget {
         ),
       ),
     );
+            ],
+        ),
+      ),
+    );
   }
-}
-```
-
 }
 ```
 
@@ -251,40 +254,6 @@ ImageBuilder(
 | `maxCacheAge` | `Duration?` | Maximum cache duration for network images | `null` |
 | `maxCacheSizeBytes` | `int?` | Maximum cache size in bytes | `null` |
 | `useAdaptiveLoading` | `bool` | Enable platform-adaptive loading indicators | `true` |
-| `loadingColor` | `Color?` | Custom color for adaptive loading indicators | `null` |
-          ),
-        ],
-      ),
-    );
-  }
-}
-```
-
-## API Reference
-
-### ImageBuilder()
-
-Creates an image widget from the given path. Supports both network URLs and local assets.
-
-**Constructor:**
-```dart
-ImageBuilder(
-  String path, {
-  Key? key,
-  double? width,
-  double? height,
-  double? size,
-  Color? color,
-  BoxFit fit = BoxFit.contain,
-  Widget? placeholder,
-  Widget? errorWidget,
-  Duration? maxCacheAge,
-  int? maxCacheSizeBytes,
-  bool useAdaptiveLoading = true,
-  Color? loadingColor,
-})
-```
-
 | `loadingColor` | `Color?` | Custom color for adaptive loading indicators | `null` |
 
 ## 🎯 Supported Image Formats
