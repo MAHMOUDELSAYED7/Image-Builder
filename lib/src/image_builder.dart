@@ -9,31 +9,31 @@ import 'logger.dart';
 class ImageBuilder extends StatelessWidget {
   /// The image path or URL
   final String path;
-  
+
   /// The width of the image (ignored if [size] is provided)
   final double? width;
-  
+
   /// The height of the image (ignored if [size] is provided)
   final double? height;
-  
+
   /// Sets both width and height to the same value
   final double? size;
-  
+
   /// A color to apply to the image
   final Color? color;
-  
+
   /// How to fit the image within its bounds
   final BoxFit fit;
-  
+
   /// Widget to show while loading network images
   final Widget? placeholder;
-  
+
   /// Widget to show when image fails to load
   final Widget? errorWidget;
-  
+
   /// Maximum cache age for network images (currently unused)
   final Duration? maxCacheAge;
-  
+
   /// Maximum cache size in bytes (currently unused)
   final int? maxCacheSizeBytes;
 
@@ -45,7 +45,7 @@ class ImageBuilder extends StatelessWidget {
   );
 
   /// Creates an ImageBuilder widget.
-  /// 
+  ///
   /// The [path] can be:
   /// - A network URL (http:// or https://)
   /// - A local asset path (for SVG, PNG, JPG, JPEG, WEBP files)

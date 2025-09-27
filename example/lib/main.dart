@@ -39,21 +39,15 @@ class ImageBuilderExample extends StatelessWidget {
             _buildSectionTitle('Network Images'),
             const SizedBox(height: 10),
             _buildNetworkImageExamples(),
-            
             const SizedBox(height: 30),
-            
             _buildSectionTitle('Error Handling'),
             const SizedBox(height: 10),
             _buildErrorHandlingExample(),
-            
             const SizedBox(height: 30),
-            
             _buildSectionTitle('Size Variations'),
             const SizedBox(height: 10),
             _buildSizeVariations(),
-            
             const SizedBox(height: 30),
-            
             _buildSectionTitle('Custom Placeholders'),
             const SizedBox(height: 10),
             _buildCustomPlaceholderExample(),
@@ -147,7 +141,8 @@ class ImageBuilderExample extends StatelessWidget {
                     children: [
                       Icon(Icons.error_outline, color: Colors.red, size: 40),
                       SizedBox(height: 8),
-                      Text('Failed to load', style: TextStyle(color: Colors.red, fontSize: 12)),
+                      Text('Failed to load',
+                          style: TextStyle(color: Colors.red, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -170,9 +165,11 @@ class ImageBuilderExample extends StatelessWidget {
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.image_not_supported, color: Colors.orange, size: 40),
+                      Icon(Icons.image_not_supported,
+                          color: Colors.orange, size: 40),
                       SizedBox(height: 8),
-                      Text('Asset not found', style: TextStyle(color: Colors.orange, fontSize: 12)),
+                      Text('Asset not found',
+                          style: TextStyle(color: Colors.orange, fontSize: 12)),
                     ],
                   ),
                 ),
