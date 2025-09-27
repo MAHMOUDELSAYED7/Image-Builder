@@ -457,17 +457,6 @@ Package file_picker:* references file_picker:* as the default plugin...
 
 **Solution:** These are warnings and don't affect functionality. The app will work correctly.
 
-**Network Images Not Loading on Android:**
-```
-Network images fail to load on Android
-```
-
-**Solution:** Ensure network permissions are added to `android/app/src/main/AndroidManifest.xml`:
-```xml
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-```
-
 **General Build Issues:**
 ```bash
 flutter clean
@@ -479,7 +468,6 @@ flutter pub get
 - **Web**: File operations automatically use `ImageBuilder.memory()` fallback
 - **Desktop**: Requires system file dialog permissions
 - **Mobile**: Requires camera/gallery permissions in Info.plist/AndroidManifest.xml
-- **Android**: Requires internet permissions for network image loading
 
 ## 🤝 Contributing
 

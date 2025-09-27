@@ -168,56 +168,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 200,
                   height: 200,
                   color: Colors.red[100],
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, color: Colors.red),
-                        SizedBox(height: 8),
-                        Text('Failed to load\nnetwork image',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error, color: Colors.red, size: 32),
+                      SizedBox(height: 8),
+                      Text('Failed to load', style: TextStyle(fontSize: 12)),
+                    ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            _buildTestCase(
-              'Alternative Network Image (via.placeholder)',
-              ImageBuilder(
-                'https://via.placeholder.com/200x200.png',
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-                useAdaptiveLoading: true,
-                errorWidget: Container(
-                  width: 200,
-                  height: 200,
-                  color: Colors.orange[100],
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, color: Colors.orange),
-                        SizedBox(height: 8),
-                        Text('Failed to load\nalternative image',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),            const SizedBox(height: 32),
+
+            const SizedBox(height: 32),
 
             _buildSectionHeader('Large Network Image'),
             const SizedBox(height: 16),
             _buildTestCase(
               'Large Image for Slow Loading Example',
               ImageBuilder(
-                'https://picsum.photos/2000/1500?random=2', // Very large image
+                'https://picsum.photos/2000/1500?random=2', 
                 width: 250,
                 height: 180,
                 fit: BoxFit.cover,
