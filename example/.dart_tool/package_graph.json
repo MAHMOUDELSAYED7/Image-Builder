@@ -7,6 +7,7 @@
       "name": "image_builder_example",
       "version": "1.0.0+1",
       "dependencies": [
+        "cupertino_icons",
         "flutter",
         "image_builder"
       ],
@@ -17,7 +18,7 @@
     },
     {
       "name": "flutter_lints",
-      "version": "3.0.2",
+      "version": "5.0.0",
       "dependencies": [
         "lints"
       ]
@@ -60,6 +61,11 @@
       ]
     },
     {
+      "name": "cupertino_icons",
+      "version": "1.0.8",
+      "dependencies": []
+    },
+    {
       "name": "flutter",
       "version": "0.0.0",
       "dependencies": [
@@ -73,7 +79,7 @@
     },
     {
       "name": "lints",
-      "version": "3.0.0",
+      "version": "5.1.1",
       "dependencies": []
     },
     {

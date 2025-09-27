@@ -1,29 +1,16 @@
-# ImageBuilder Example
+# image_builder_example
 
-This example demonstrates the usage of the ImageBuilder package.
+A new Flutter project.
 
-## Running the Example
+## Getting Started
 
-1. Make sure you have Flutter installed and configured
-2. Navigate to the example directory:
-   ```bash
-   cd example
-   ```
-3. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-4. Run the app:
-   ```bash
-   flutter run
-   ```
+This project is a starting point for a Flutter application.
 
-## What the Example Shows
+A few resources to get you started if this is your first Flutter project:
 
-- Network image loading with caching
-- Error handling for failed network requests and missing assets
-- Different sizing options (size, width/height)
-- Custom loading placeholders
-- Custom error widgets
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-The example uses random images from [Picsum](https://picsum.photos/) to demonstrate network image loading capabilities.
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

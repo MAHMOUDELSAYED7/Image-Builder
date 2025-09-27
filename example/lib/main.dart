@@ -11,268 +11,251 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ImageBuilder Example',
+      title: 'ImageBuilder Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ImageBuilderExample(),
+      home: const MyHomePage(title: 'ImageBuilder Package Test'),
     );
   }
 }
 
-class ImageBuilderExample extends StatelessWidget {
-  const ImageBuilderExample({super.key});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
 
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('ImageBuilder Example'),
+        title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const MyHomePage(title: 'ImageBuilder Package Test'),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            },
+            tooltip: 'Refresh Images',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildSectionTitle('Network Images'),
-            const SizedBox(height: 10),
-            _buildNetworkImageExamples(),
-            const SizedBox(height: 30),
-            _buildSectionTitle('Error Handling'),
-            const SizedBox(height: 10),
-            _buildErrorHandlingExample(),
-            const SizedBox(height: 30),
-            _buildSectionTitle('Size Variations'),
-            const SizedBox(height: 10),
-            _buildSizeVariations(),
-            const SizedBox(height: 30),
-            _buildSectionTitle('Custom Placeholders'),
-            const SizedBox(height: 10),
-            _buildCustomPlaceholderExample(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.deepPurple,
-      ),
-    );
-  }
-
-  Widget _buildNetworkImageExamples() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: ImageBuilder(
-                  'https://picsum.photos/150/150?random=1',
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: ImageBuilder(
-                  'https://picsum.photos/150/150?random=2',
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'Two network images loaded with caching',
-          style: TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildErrorHandlingExample() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ImageBuilder(
-                'https://invalid-url-that-will-fail.com/image.jpg',
-                width: 150,
-                height: 150,
+            _buildSectionHeader('Network Images'),
+            const SizedBox(height: 16),
+            _buildTestCase(
+              'Standard Network Image',
+              ImageBuilder(
+                'https://picsum.photos/200/200?random=1',
+                width: 200,
+                height: 200,
                 fit: BoxFit.cover,
+                useAdaptiveLoading: true,
                 errorWidget: Container(
-                  color: Colors.red.shade50,
+                  width: 200,
+                  height: 200,
+                  color: Colors.red[100],
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.error_outline, color: Colors.red, size: 40),
+                      Icon(Icons.error, color: Colors.red, size: 32),
                       SizedBox(height: 8),
-                      Text('Failed to load',
-                          style: TextStyle(color: Colors.red, fontSize: 12)),
+                      Text('Failed to load', style: TextStyle(fontSize: 12)),
                     ],
                   ),
                 ),
               ),
             ),
-            Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ImageBuilder(
-                'assets/non_existent_image.png',
-                width: 150,
-                height: 150,
+
+            const SizedBox(height: 32),
+
+            _buildSectionHeader('Large Network Image'),
+            const SizedBox(height: 16),
+            _buildTestCase(
+              'Large Image for Slow Loading Demo',
+              ImageBuilder(
+                'https://picsum.photos/2000/1500?random=2', // Very large image
+                width: 250,
+                height: 180,
                 fit: BoxFit.cover,
+                useAdaptiveLoading: true,
+                loadingColor: Colors.blue,
                 errorWidget: Container(
-                  color: Colors.orange.shade50,
+                  width: 250,
+                  height: 180,
+                  color: Colors.blue[100],
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.image_not_supported,
-                          color: Colors.orange, size: 40),
+                      Icon(Icons.broken_image, color: Colors.blue, size: 32),
                       SizedBox(height: 8),
-                      Text('Asset not found',
-                          style: TextStyle(color: Colors.orange, fontSize: 12)),
+                      Text('Large image failed', style: TextStyle(fontSize: 10, color: Colors.blue)),
                     ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'Error handling with custom error widgets',
-          style: TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
 
-  Widget _buildSizeVariations() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
+            const SizedBox(height: 32),
+            
+            _buildSectionHeader('SVG Images'),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ImageBuilder(
-                  'https://picsum.photos/100/100?random=3',
-                  size: 50,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(height: 5),
-                const Text('50x50', style: TextStyle(fontSize: 12)),
-              ],
-            ),
-            Column(
-              children: [
-                ImageBuilder(
-                  'https://picsum.photos/100/100?random=4',
-                  size: 80,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(height: 5),
-                const Text('80x80', style: TextStyle(fontSize: 12)),
-              ],
-            ),
-            Column(
-              children: [
-                ImageBuilder(
-                  'https://picsum.photos/120/80?random=5',
-                  width: 120,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(height: 5),
-                const Text('120x80', style: TextStyle(fontSize: 12)),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'Different size configurations',
-          style: TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCustomPlaceholderExample() {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: ImageBuilder(
-              'https://picsum.photos/200/120?random=6',
-              width: 200,
-              height: 120,
-              fit: BoxFit.cover,
-              placeholder: Container(
-                color: Colors.blue.shade50,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    CircularProgressIndicator(color: Colors.blue),
-                    SizedBox(height: 8),
-                    Text('Loading...', style: TextStyle(color: Colors.blue)),
+                    ImageBuilder(
+                      'assets/icons/android.svg',
+                      size: 60,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(height: 4),
+                    const Text('Blue Android', style: TextStyle(fontSize: 12)),
                   ],
                 ),
+                Column(
+                  children: [
+                    ImageBuilder(
+                      'assets/icons/github.svg',
+                      size: 60,
+                    ),
+                    const SizedBox(height: 4),
+                    const Text('GitHub Original', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 32),
+            
+            _buildSectionHeader('Local Images'),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    _buildTestCase(
+                      'Local JPG',
+                      ImageBuilder(
+                        'assets/images/file_formats.jpg',
+                        width: 150,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    _buildTestCase(
+                      'Local PNG',
+                      ImageBuilder(
+                        'assets/images/rectangle.png',
+                        width: 150,
+                        height: 120,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 32),
+            
+            _buildSectionHeader('Error Handling'),
+            const SizedBox(height: 16),
+            _buildTestCase(
+              'Non-existent Image URL',
+              ImageBuilder(
+                'https://this-does-not-exist.com/image.jpg',
+                width: 150,
+                height: 150,
+                errorWidget: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.orange[100],
+                    border: Border.all(color: Colors.orange, width: 2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.broken_image, color: Colors.orange, size: 32),
+                      SizedBox(height: 8),
+                      Text(
+                        'Error loading image',
+                        style: TextStyle(fontSize: 10, color: Colors.orange),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
+
+            const SizedBox(height: 32),
+          ],
         ),
-        const SizedBox(height: 10),
-        const Text(
-          'Custom loading placeholder (refresh to see)',
-          style: TextStyle(color: Colors.grey),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.deepPurple.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.deepPurple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTestCase(String title, Widget imageWidget) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: imageWidget,
+          ),
         ),
       ],
     );

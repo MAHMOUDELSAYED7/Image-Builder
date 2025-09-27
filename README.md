@@ -9,7 +9,7 @@ A versatile Flutter package for handling various image types including network i
 - 📱 Local asset image support
 - 🎨 SVG rendering with color customization
 - ⚡ Built-in error handling and fallback widgets
-- 🔄 Loading placeholders for network images
+- 🔄 Adaptive loading placeholders (iOS/macOS: Cupertino, Android/Web: Material)
 - 📏 Flexible sizing options (width/height or unified size)
 
 ## Installation
@@ -91,6 +91,56 @@ ImageBuilder(
 )
 ```
 
+### Adaptive Loading Indicators
+
+The package provides platform-adaptive loading indicators that automatically adjust based on the platform:
+
+- **iOS/macOS**: Uses `CupertinoActivityIndicator` for native look and feel
+- **Android/Web/Others**: Uses `CircularProgressIndicator` for Material Design
+
+```dart
+// Enable adaptive loading (default behavior)
+ImageBuilder(
+  'https://example.com/image.jpg',
+  width: 200,
+  height: 200,
+  useAdaptiveLoading: true, // Default: true
+)
+
+// Disable adaptive loading (always uses Material Design)
+ImageBuilder(
+  'https://example.com/image.jpg',
+  width: 200,
+  height: 200,
+  useAdaptiveLoading: false, // Always CircularProgressIndicator
+)
+```
+
+### Custom Loading Colors
+
+You can customize the color of the adaptive loading indicators:
+
+```dart
+// Blue loading indicator
+ImageBuilder(
+  'https://example.com/image.jpg',
+  width: 200,
+  height: 200,
+  useAdaptiveLoading: true,
+  loadingColor: Colors.blue,
+)
+
+// Custom color for platform-specific indicators
+ImageBuilder(
+  'https://example.com/large-image.jpg',
+  width: 300,
+  height: 200,
+  loadingColor: Colors.green, // Works on both Cupertino and Material indicators
+)
+```
+
+**Note**: Adaptive loading only applies when no custom `placeholder` is provided. If you provide a custom placeholder, it will be used instead of the adaptive loading indicator.
+
 ### Complete Example
 
 ```dart
@@ -157,6 +207,8 @@ ImageBuilder(
   Widget? errorWidget,
   Duration? maxCacheAge,
   int? maxCacheSizeBytes,
+  bool useAdaptiveLoading = true,
+  Color? loadingColor,
 })
 ```
 
@@ -169,6 +221,8 @@ ImageBuilder(
 - `fit` (BoxFit): How to fit the image within its bounds (default: BoxFit.contain)
 - `placeholder` (Widget?): Widget to show while loading network images
 - `errorWidget` (Widget?): Widget to show when image fails to load
+- `useAdaptiveLoading` (bool): Whether to use platform-adaptive loading indicators (default: true)
+- `loadingColor` (Color?): Color for the adaptive loading indicators
 
 ## Supported Formats
 

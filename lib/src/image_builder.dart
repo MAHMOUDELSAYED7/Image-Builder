@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'logger.dart';
@@ -37,6 +39,14 @@ class ImageBuilder extends StatelessWidget {
   /// Maximum cache size in bytes (currently unused)
   final int? maxCacheSizeBytes;
 
+  /// Whether to use platform-adaptive loading indicators (iOS: CupertinoActivityIndicator, Android: CircularProgressIndicator)
+  /// Defaults to true. Only applies when no custom placeholder is provided.
+  final bool useAdaptiveLoading;
+
+  /// Color for the adaptive loading indicator
+  /// If null, uses the default theme colors
+  final Color? loadingColor;
+
   static final Logger _logger = Logger();
 
   static final RegExp _extensionRegex = RegExp(
@@ -61,7 +71,29 @@ class ImageBuilder extends StatelessWidget {
     this.errorWidget,
     this.maxCacheAge,
     this.maxCacheSizeBytes,
+    this.useAdaptiveLoading = true,
+    this.loadingColor,
   });
+
+  /// Creates a platform-adaptive loading indicator
+  /// iOS/macOS: CupertinoActivityIndicator
+  /// Android/Web/Others: CircularProgressIndicator
+  Widget _buildAdaptiveLoadingIndicator() {
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return CupertinoActivityIndicator(
+          color: loadingColor,
+        );
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return CircularProgressIndicator(
+          color: loadingColor,
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,15 +113,21 @@ class ImageBuilder extends StatelessWidget {
         height: effectiveHeight,
         fit: fit,
         color: color,
-        placeholder: (context, url) =>
-            placeholder ?? const Center(child: CircularProgressIndicator()),
+        placeholder: (context, url) => placeholder ?? 
+            Center(child: useAdaptiveLoading 
+                ? _buildAdaptiveLoadingIndicator() 
+                : CircularProgressIndicator(color: loadingColor)),
         errorWidget: (context, url, error) {
-          _logger.error(
-            'Failed to load network image: $path',
-            tag: 'ImageBuilder',
-            error: error,
-            stackTrace: StackTrace.current,
-          );
+          try {
+            _logger.error(
+              'Failed to load network image: $url',
+              tag: 'ImageBuilder',
+              error: error,
+              stackTrace: null, // Avoid generating stack trace in error handlers
+            );
+          } catch (loggingError) {
+            // If logging fails, continue without logging to prevent cascade errors
+          }
           return errorWidget ?? const Icon(Icons.error);
         },
       );
@@ -99,12 +137,16 @@ class ImageBuilder extends StatelessWidget {
     final extension = match?.group(1)?.toLowerCase();
 
     if (extension == null) {
-      _logger.error(
-        'Invalid image path: $path',
-        tag: 'ImageBuilder',
-        error: Exception('No valid file extension found'),
-        stackTrace: StackTrace.current,
-      );
+      try {
+        _logger.error(
+          'Invalid image path: $path',
+          tag: 'ImageBuilder',
+          error: Exception('No valid file extension found'),
+          stackTrace: null, // Avoid generating stack trace in error handlers
+        );
+      } catch (loggingError) {
+        // If logging fails, continue without logging to prevent cascade errors
+      }
       return errorWidget ?? const Icon(Icons.error);
     }
 
@@ -118,13 +160,17 @@ class ImageBuilder extends StatelessWidget {
           colorFilter:
               color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
         );
-      } catch (e, stackTrace) {
-        _logger.error(
-          'Failed to load SVG asset: $path',
-          tag: 'ImageBuilder',
-          error: e,
-          stackTrace: stackTrace,
-        );
+      } catch (e) {
+        try {
+          _logger.error(
+            'Failed to load SVG asset: $path',
+            tag: 'ImageBuilder',
+            error: e,
+            stackTrace: null, // Avoid passing stack traces in web environment
+          );
+        } catch (loggingError) {
+          // If logging fails, continue without logging to prevent cascade errors
+        }
         return errorWidget ?? const Icon(Icons.error);
       }
     }
@@ -139,32 +185,44 @@ class ImageBuilder extends StatelessWidget {
           color: color,
           filterQuality: FilterQuality.medium,
           errorBuilder: (context, error, stackTrace) {
-            _logger.error(
-              'Failed to load image asset: $path',
-              tag: 'ImageBuilder',
-              error: error,
-              stackTrace: stackTrace,
-            );
+            try {
+              _logger.error(
+                'Failed to load image asset: $path',
+                tag: 'ImageBuilder',
+                error: error,
+                stackTrace: null, // Avoid passing stack traces in web environment
+              );
+            } catch (loggingError) {
+              // If logging fails, continue without logging to prevent cascade errors
+            }
             return errorWidget ?? const Icon(Icons.error);
           },
         );
-      } catch (e, stackTrace) {
-        _logger.error(
-          'Failed to load image asset: $path',
-          tag: 'ImageBuilder',
-          error: e,
-          stackTrace: stackTrace,
-        );
+      } catch (e) {
+        try {
+          _logger.error(
+            'Failed to load image asset: $path',
+            tag: 'ImageBuilder',
+            error: e,
+            stackTrace: null, // Avoid passing stack traces in web environment
+          );
+        } catch (loggingError) {
+          // If logging fails, continue without logging to prevent cascade errors
+        }
         return errorWidget ?? const Icon(Icons.error);
       }
     }
 
-    _logger.error(
-      'Unsupported image format: $extension for path: $path',
-      tag: 'ImageBuilder',
-      error: UnsupportedError('Unsupported image format: $extension'),
-      stackTrace: StackTrace.current,
-    );
+    try {
+      _logger.error(
+        'Unsupported image format: $extension for path: $path',
+        tag: 'ImageBuilder',
+        error: UnsupportedError('Unsupported image format: $extension'),
+        stackTrace: null, // Avoid generating stack trace in error handlers
+      );
+    } catch (loggingError) {
+      // If logging fails, continue without logging to prevent cascade errors
+    }
     return errorWidget ?? const Icon(Icons.error);
   }
 }
