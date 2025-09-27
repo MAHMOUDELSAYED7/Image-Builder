@@ -11,12 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ImageBuilder Demo',
+      title: 'ImageBuilder Example',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'ImageBuilder Package Test'),
+      home: const MyHomePage(title: 'ImageBuilder Package Example'),
     );
   }
 }
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
-                      const MyHomePage(title: 'ImageBuilder Package Test'),
+                      const MyHomePage(title: 'ImageBuilder Package Example'),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _buildSectionHeader('Large Network Image'),
             const SizedBox(height: 16),
             _buildTestCase(
-              'Large Image for Slow Loading Demo',
+              'Large Image for Slow Loading Example',
               ImageBuilder(
                 'https://picsum.photos/2000/1500?random=2', // Very large image
                 width: 250,
