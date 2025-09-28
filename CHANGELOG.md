@@ -1,10 +1,16 @@
-# Chang## [1.1.3] - 2025-09-28
+# Changelog
 
-### Fixed
-- 🎨 **Code formatting**: Applied `dart format` to all files to meet pub.dev static analysis requirements
-- 🔧 **Package description**: Shortened description to meet pub.dev requirements (60-180 characters)
-- 🔗 **URL validation**: Removed non-existent repository URLs to improve pub.dev scoring
-- 📦 **Pub.dev compliance**: Fixed all issues identified in package analysis for maximum pub points
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.4] - 2025-09-28
+
+### Updated
+- � **Version bump**: Updated to 1.1.4 for republication
+- 🎨 **Code formatting**: Applied `dart format` to ensure all code meets pub.dev standards
+- ✨ **Package maintenance**: Routine update to maintain package quality
 
 ## [1.1.3] - 2025-09-28
 
@@ -12,6 +18,10 @@
 - 🔗 **Homepage and Repository URLs**: Added valid homepage and repository entries to pubspec.yaml to fix pub.dev scoring
 - 📦 **Pub.dev compliance**: Should now achieve full 160/160 pub points
 - 🎯 **Package metadata**: Complete package information for better discoverability
+
+## [1.1.2] - 2025-09-28
+
+### Fixed
 
 ## [1.1.2] - 2025-09-28
 
