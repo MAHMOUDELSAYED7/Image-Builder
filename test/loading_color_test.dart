@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_builder/image_builder.dart';
 
 /// Test suite for ImageBuilder loading color customization functionality.
-/// 
+///
 /// This suite tests the ability to customize the color of adaptive loading indicators
 /// across different platforms (iOS/macOS with Cupertino vs Android/Web with Material).
-/// 
+///
 /// Tests verify:
 /// - Color application on platform-specific loading indicators
 /// - Default behavior when no color is specified
@@ -18,7 +18,7 @@ void main() {
   group('ImageBuilder Loading Color Tests', () {
     /// Test that loading colors are properly applied to CircularProgressIndicator
     /// on Android and other non-iOS platforms.
-    /// 
+    ///
     /// This test simulates Android platform and verifies that the specified
     /// blue color is correctly applied to the Material Design loading indicator.
     testWidgets(
@@ -58,7 +58,7 @@ void main() {
 
     /// Test that loading colors are properly applied to CupertinoActivityIndicator
     /// on iOS and macOS platforms.
-    /// 
+    ///
     /// This test simulates iOS platform and verifies that the specified
     /// red color is correctly applied to the Cupertino-style loading indicator.
     testWidgets(

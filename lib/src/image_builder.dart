@@ -16,7 +16,7 @@ class ImageBuilder extends StatelessWidget {
   /// File object for file-based images
   final File? file;
 
-  /// Memory bytes for memory-based images  
+  /// Memory bytes for memory-based images
   final Uint8List? bytes;
 
   /// The width of the image (ignored if [size] is provided)
@@ -231,17 +231,20 @@ class ImageBuilder extends StatelessWidget {
         height: height,
         fit: fit,
         color: color,
-        placeholder: (context, url) => placeholder ?? 
-            Center(child: useAdaptiveLoading 
-                ? _buildAdaptiveLoadingIndicator() 
-                : CircularProgressIndicator(color: loadingColor)),
+        placeholder: (context, url) =>
+            placeholder ??
+            Center(
+                child: useAdaptiveLoading
+                    ? _buildAdaptiveLoadingIndicator()
+                    : CircularProgressIndicator(color: loadingColor)),
         errorWidget: (context, url, error) {
           try {
             _logger.error(
               'Failed to load network image: $url',
               tag: 'ImageBuilder',
               error: error,
-              stackTrace: null, // Avoid generating stack trace in error handlers
+              stackTrace:
+                  null, // Avoid generating stack trace in error handlers
             );
           } catch (loggingError) {
             // If logging fails, continue without logging to prevent cascade errors
@@ -281,11 +284,14 @@ class ImageBuilder extends StatelessWidget {
         width: width,
         height: height,
         fit: fit,
-        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
-        placeholderBuilder: (context) => placeholder ?? 
-            Center(child: useAdaptiveLoading 
-                ? _buildAdaptiveLoadingIndicator() 
-                : CircularProgressIndicator(color: loadingColor)),
+        colorFilter:
+            color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        placeholderBuilder: (context) =>
+            placeholder ??
+            Center(
+                child: useAdaptiveLoading
+                    ? _buildAdaptiveLoadingIndicator()
+                    : CircularProgressIndicator(color: loadingColor)),
       );
     }
 
@@ -303,7 +309,8 @@ class ImageBuilder extends StatelessWidget {
               'Failed to load asset image: $imagePath',
               tag: 'ImageBuilder',
               error: error,
-              stackTrace: null, // Avoid generating stack trace in error handlers
+              stackTrace:
+                  null, // Avoid generating stack trace in error handlers
             );
           } catch (loggingError) {
             // If logging fails, continue without logging to prevent cascade errors

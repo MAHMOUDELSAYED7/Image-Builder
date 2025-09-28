@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:image_builder/image_builder.dart';
 
 /// Test suite for ImageBuilder network error handling fixes.
-/// 
+///
 /// This suite specifically tests the fixes implemented to prevent cascading
 /// network errors that could cause infinite loops or crashes in web environments.
-/// 
+///
 /// Tests verify:
 /// - Graceful handling of specific network error scenarios
 /// - Prevention of cascading StackTrace errors in web environments
@@ -15,7 +15,7 @@ import 'package:image_builder/image_builder.dart';
 void main() {
   group('ImageBuilder Network Error Handling', () {
     /// Test handling of specific domain resolution errors.
-    /// 
+    ///
     /// This test uses a known non-existent domain to trigger DNS resolution
     /// failures and verifies that the error is handled gracefully with a custom error widget.
     testWidgets('should handle "this-does-not-exist.com" error gracefully',
