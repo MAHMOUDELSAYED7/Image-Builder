@@ -6,6 +6,13 @@
 - 🔗 **URL validation**: Removed non-existent repository URLs to improve pub.dev scoring
 - 📦 **Pub.dev compliance**: Fixed all issues identified in package analysis for maximum pub points
 
+## [1.1.3] - 2025-09-28
+
+### Fixed
+- 🔗 **Homepage and Repository URLs**: Added valid homepage and repository entries to pubspec.yaml to fix pub.dev scoring
+- 📦 **Pub.dev compliance**: Should now achieve full 160/160 pub points
+- 🎯 **Package metadata**: Complete package information for better discoverability
+
 ## [1.1.2] - 2025-09-28
 
 ### Fixed

@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "image_builder",
-      "version": "1.1.2",
+      "version": "1.1.3",
       "dependencies": [
         "cached_network_image",
         "flutter",
