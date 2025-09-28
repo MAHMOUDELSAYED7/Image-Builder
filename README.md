@@ -25,7 +25,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  image_builder: ^1.1.0
+  image_builder: ^1.1.1
 ```
 
 Then run:
