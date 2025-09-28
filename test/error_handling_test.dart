@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:image_builder/image_builder.dart';
 
 /// Test suite for ImageBuilder error handling functionality.
-/// 
+///
 /// This suite tests the widget's resilience to various error conditions
 /// including network failures, invalid URLs, malformed paths, and null values.
-/// 
+///
 /// Tests verify:
 /// - Graceful handling of network errors without crashes
 /// - Proper handling of invalid file paths
@@ -15,7 +15,7 @@ import 'package:image_builder/image_builder.dart';
 void main() {
   group('ImageBuilder Error Handling Tests', () {
     /// Test that the widget handles network errors gracefully without crashing.
-    /// 
+    ///
     /// This test uses a non-existent URL to simulate network failures and
     /// verifies that the widget tree constructs properly with a custom error widget.
     testWidgets('should build widget tree without crashing on network errors',
@@ -28,7 +28,8 @@ void main() {
               'https://this-does-not-exist.com/image.jpg', // Invalid URL
               width: 100,
               height: 100,
-              errorWidget: const Icon(Icons.error, color: Colors.red), // Custom error widget
+              errorWidget: const Icon(Icons.error,
+                  color: Colors.red), // Custom error widget
             ),
           ),
         ),
@@ -44,7 +45,7 @@ void main() {
     });
 
     /// Test that invalid file paths are handled gracefully without exceptions.
-    /// 
+    ///
     /// This test uses a malformed path to verify that the ImageBuilder
     /// can handle various types of invalid input without throwing exceptions.
     testWidgets('should handle invalid paths without throwing exceptions',
