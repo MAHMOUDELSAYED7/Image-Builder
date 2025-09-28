@@ -8,26 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2025-09-28
 
 ### Added
+- 📁 **File image support**: New `ImageBuilder.file()` constructor for loading images from device files
+- 💾 **Memory image support**: New `ImageBuilder.memory()` constructor for displaying images from Uint8List data
 - 🎯 **Loading color customization**: New `loadingColor` parameter for customizing adaptive loading indicator colors
 - 🔄 **Platform-adaptive loading indicators**: 
   - iOS/macOS: `CupertinoActivityIndicator` for native look
   - Android/Web/Others: `CircularProgressIndicator` for Material Design
 - 🛡️ **Enhanced error handling**: Bulletproof network error handling prevents cascading crashes
-- 🧪 **Comprehensive test suite**: 14+ test cases covering all functionality
+- 🧪 **Comprehensive test suite**: 25+ test cases covering all functionality including file/memory images
 - 📱 **Multi-platform support**: Full iOS, macOS, Android, Web compatibility
-- 📖 **Extensive documentation**: Detailed README with examples and API reference
+- 📖 **Enhanced example app**: Interactive file picker with cross-platform image upload functionality
 - 🔐 **macOS network permissions**: Proper entitlements for network image loading
 - 📝 **Comprehensive comments**: All test files include detailed explanatory comments
 
 ### Changed
-- ♻️ **Simplified API**: Single `ImageBuilder()` constructor replaces multiple factory methods
-- 🎨 **Improved example app**: Clean, focused examples showcasing core functionality
-- 📚 **Enhanced README**: Complete rewrite with better organization and examples
+- ♻️ **Simplified API**: Unified constructor patterns with cleaner parameter structure
+- 🎨 **Improved example app**: Real device file picker integration showcasing ImageBuilder.file()
+- 📚 **Enhanced README**: Complete rewrite with better organization, more examples, and updated API reference
+- 🔧 **Updated dependencies**: flutter_svg updated to ^2.0.9 for better compatibility
 
 ### Fixed
 - 🐛 **Network error crashes**: Fixed cascading StackTrace errors in web environment
 - 🔧 **Web compatibility**: Improved error handling for web-specific issues
 - 🎯 **Loading indicator reliability**: Consistent behavior across all platforms
+- 📱 **File handling edge cases**: Better error recovery for invalid file paths and corrupted data
 
 ## [1.0.0] - 2025-09-27
 
