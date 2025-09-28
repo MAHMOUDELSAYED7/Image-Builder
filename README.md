@@ -1,6 +1,9 @@
 # ImageBuilder
 
-A comprehensive Flutter package for handling various image types including network images, SVGs, local assets, file images, and memory images with advanced caching, platform-adaptive loading indicators, and robust error handling.
+A compreh```yaml
+dependencies:
+  image_builder: ^1.1.3
+```ve Flutter package for handling various image types including network images, SVGs, local assets, file images, and memory images with advanced caching, platform-adaptive loading indicators, and robust error handling.
 
 ## ✨ Features
 
