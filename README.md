@@ -17,7 +17,7 @@ A comprehensive Flutter package for handling various image types including netwo
 - 🎯 **Loading color customization**: Custom colors for loading indicators
 - 📏 **Flexible sizing**: Individual width/height or unified size parameter
 - 🛡️ **Production-ready**: Comprehensive error handling prevents crashes
-- 🧪 **Well-tested**: Extensive test suite with 19+ test cases
+- 🧪 **Well-tested**: Extensive test suite with 25+ test cases covering all functionality
 
 ## 📦 Installation
 
@@ -25,7 +25,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  image_builder: ^1.0.0
+  image_builder: ^1.1.0
 ```
 
 Then run:
@@ -414,60 +414,26 @@ ImageBuilder.memory(
 This package uses these well-maintained dependencies:
 
 - **[cached_network_image](https://pub.dev/packages/cached_network_image)** `^3.3.0` - Network image caching and loading
-- **[flutter_svg](https://pub.dev/packages/flutter_svg)** `^2.0.0` - SVG rendering and color customization
+- **[flutter_svg](https://pub.dev/packages/flutter_svg)** `^2.0.9` - SVG rendering and color customization
 
 ## 🧪 Testing
 
 The package includes comprehensive tests covering:
 
-- ✅ **Platform-adaptive loading** behavior 
+- ✅ **Platform-adaptive loading** behavior across all platforms
 - ✅ **Loading color customization** functionality
 - ✅ **Network error handling** and recovery
+- ✅ **File image loading** with proper error handling
+- ✅ **Memory image display** from Uint8List data
 - ✅ **Graceful error states** without crashes
 - ✅ **Cross-platform compatibility** testing
+- ✅ **SVG color tinting** and rendering
+- ✅ **Robust widget construction** for all image types
 
 Run tests with:
 ```bash
 flutter test
 ```
-
-## 🔧 Troubleshooting
-
-### Example App Issues
-
-If you encounter compilation issues with the example app:
-
-**Android NDK Version Error:**
-```
-Plugin requires Android NDK 27.0.12077973
-```
-
-**Solution:** Update `android/app/build.gradle.kts`:
-```kotlin
-android {
-    ndkVersion = "27.0.12077973"
-    // ... other config
-}
-```
-
-**File Picker Plugin Warnings:**
-```
-Package file_picker:* references file_picker:* as the default plugin...
-```
-
-**Solution:** These are warnings and don't affect functionality. The app will work correctly.
-
-**General Build Issues:**
-```bash
-flutter clean
-flutter pub get
-```
-
-### Platform-Specific Notes
-
-- **Web**: File operations automatically use `ImageBuilder.memory()` fallback
-- **Desktop**: Requires system file dialog permissions
-- **Mobile**: Requires camera/gallery permissions in Info.plist/AndroidManifest.xml
 
 ## 🤝 Contributing
 
@@ -478,7 +444,3 @@ For major changes, please open an issue first to discuss what you would like to 
 ## 📄 License
 
 MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
