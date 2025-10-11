@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-09-28
+
+### Changed
+- 🎯 **Simplified API**: Unified constructor pattern - use `ImageBuilder(source)` for all image types
+- 📦 **Unified source parameter**: The constructor now accepts String, File, or Uint8List directly
+- ✨ **Cleaner API**: More intuitive interface with automatic type detection
+
+### Deprecated
+- ⚠️ **ImageBuilder.file()**: Use `ImageBuilder(file)` instead. Will be removed in v2.0.0
+- ⚠️ **ImageBuilder.memory()**: Use `ImageBuilder(bytes)` instead. Will be removed in v2.0.0
+- 🔄 **Migration guide**: 
+  - Replace `ImageBuilder.file(myFile)` with `ImageBuilder(myFile)`
+  - Replace `ImageBuilder.memory(myBytes)` with `ImageBuilder(myBytes)`
+  - The default constructor `ImageBuilder('path')` remains unchanged
+- ⏰ **Timeline**: Deprecated constructors still work but will show warnings. They will be removed in version 2.0.0
+
 ## [1.1.4] - 2025-09-28
 
 ### Updated

@@ -288,7 +288,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 future: _loadAssetAsBytes('assets/images/photo.jpg'),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return ImageBuilder.memory(
+                    return ImageBuilder(
                       snapshot.data!,
                       width: 200,
                       height: 150,
@@ -354,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           // For non-web platforms (desktop) use File
                           if (_pickedFile != null && !kIsWeb)
-                            ImageBuilder.file(
+                            ImageBuilder(
                               _pickedFile!,
                               width: 200,
                               height: 150,
@@ -362,7 +362,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           // For web platform use memory (since File doesn't work on web)
                           if (_webPickedFileBytes != null && kIsWeb)
-                            ImageBuilder.memory(
+                            ImageBuilder(
                               _webPickedFileBytes!,
                               width: 200,
                               height: 150,
@@ -378,8 +378,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           Text(
                             kIsWeb
-                                ? '(Using ImageBuilder.memory)'
-                                : '(Using ImageBuilder.file)',
+                                ? '(Using ImageBuilder with memory)'
+                                : '(Using ImageBuilder with file)',
                             style: const TextStyle(
                               fontSize: 10,
                               color: Colors.blue,
@@ -444,7 +444,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (_selectedImageFromGallery != null)
                       Column(
                         children: [
-                          ImageBuilder.file(
+                          ImageBuilder(
                             _selectedImageFromGallery!,
                             width: 200,
                             height: 150,
@@ -459,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                           const Text(
-                            '(Using ImageBuilder.file)',
+                            '(Using ImageBuilder with file)',
                             style: TextStyle(fontSize: 10, color: Colors.green),
                           ),
                         ],

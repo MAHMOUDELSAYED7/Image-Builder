@@ -10,14 +10,8 @@ import 'logger.dart';
 /// A versatile image widget builder that handles various image types including
 /// network images, SVGs, local assets, file images, and memory images with caching and error handling.
 class ImageBuilder extends StatelessWidget {
-  /// The image path or URL (for network and asset images)
-  final String? path;
-
-  /// File object for file-based images
-  final File? file;
-
-  /// Memory bytes for memory-based images
-  final Uint8List? bytes;
+  /// The image source - can be a String (path/URL), File, or Uint8List
+  final Object source;
 
   /// The width of the image (ignored if [size] is provided)
   final double? width;
@@ -61,13 +55,14 @@ class ImageBuilder extends StatelessWidget {
     caseSensitive: false,
   );
 
-  /// Creates an ImageBuilder widget from a path (network URL or asset path).
+  /// Creates an ImageBuilder widget that automatically detects the image source type.
   ///
-  /// The [path] can be:
-  /// - A network URL (http:// or https://)
-  /// - A local asset path (for SVG, PNG, JPG, JPEG, WEBP files)
+  /// The [source] can be:
+  /// - A String: Network URL (http:// or https://) or local asset path
+  /// - A File: Image file from device storage
+  /// - A Uint8List: Image data in memory
   const ImageBuilder(
-    String this.path, {
+    this.source, {
     super.key,
     this.width,
     this.height,
@@ -80,14 +75,18 @@ class ImageBuilder extends StatelessWidget {
     this.maxCacheSizeBytes,
     this.useAdaptiveLoading = true,
     this.loadingColor,
-  })  : file = null,
-        bytes = null;
+  });
 
-  /// Creates an ImageBuilder widget from a File object.
+  /// Creates an ImageBuilder from a File.
   ///
-  /// The [file] should be a valid image file (PNG, JPG, JPEG, WEBP).
+  /// **Deprecated:** Use `ImageBuilder(file)` instead.
+  ///
+  /// This constructor will be removed in a future version.
+  /// Migration: Replace `ImageBuilder.file(myFile)` with `ImageBuilder(myFile)`
+  @Deprecated(
+      'Use ImageBuilder(file) instead. This constructor will be removed in version 2.0.0')
   const ImageBuilder.file(
-    this.file, {
+    File file, {
     super.key,
     this.width,
     this.height,
@@ -100,14 +99,18 @@ class ImageBuilder extends StatelessWidget {
     this.maxCacheSizeBytes,
     this.useAdaptiveLoading = true,
     this.loadingColor,
-  })  : path = null,
-        bytes = null;
+  }) : source = file;
 
-  /// Creates an ImageBuilder widget from memory bytes.
+  /// Creates an ImageBuilder from memory bytes (Uint8List).
   ///
-  /// The [bytes] should contain valid image data (PNG, JPG, JPEG, WEBP).
+  /// **Deprecated:** Use `ImageBuilder(bytes)` instead.
+  ///
+  /// This constructor will be removed in a future version.
+  /// Migration: Replace `ImageBuilder.memory(myBytes)` with `ImageBuilder(myBytes)`
+  @Deprecated(
+      'Use ImageBuilder(bytes) instead. This constructor will be removed in version 2.0.0')
   const ImageBuilder.memory(
-    this.bytes, {
+    Uint8List bytes, {
     super.key,
     this.width,
     this.height,
@@ -120,8 +123,7 @@ class ImageBuilder extends StatelessWidget {
     this.maxCacheSizeBytes,
     this.useAdaptiveLoading = true,
     this.loadingColor,
-  })  : path = null,
-        file = null;
+  }) : source = bytes;
 
   /// Creates a platform-adaptive loading indicator
   /// iOS/macOS: CupertinoActivityIndicator
@@ -154,29 +156,31 @@ class ImageBuilder extends StatelessWidget {
     final effectiveWidth = size ?? width;
     final effectiveHeight = size ?? height;
 
-    // Handle file images
-    if (file != null) {
-      return _buildFileImage(effectiveWidth, effectiveHeight);
+    // Detect source type and build appropriate image widget
+    if (source is File) {
+      return _buildFileImage(source as File, effectiveWidth, effectiveHeight);
+    } else if (source is Uint8List) {
+      return _buildMemoryImage(
+          source as Uint8List, effectiveWidth, effectiveHeight);
+    } else if (source is String) {
+      return _buildPathImage(source as String, effectiveWidth, effectiveHeight);
+    } else {
+      // Unsupported source type
+      _logger.error(
+        'Unsupported image source type: ${source.runtimeType}',
+        tag: 'ImageBuilder',
+        error: UnsupportedError(
+            'Source must be String, File, or Uint8List, got ${source.runtimeType}'),
+        stackTrace: null,
+      );
+      return errorWidget ?? const Icon(Icons.error);
     }
-
-    // Handle memory images
-    if (bytes != null) {
-      return _buildMemoryImage(effectiveWidth, effectiveHeight);
-    }
-
-    // Handle path-based images (network and assets)
-    if (path != null) {
-      return _buildPathImage(path!, effectiveWidth, effectiveHeight);
-    }
-
-    // If none of the image sources are provided, show error
-    return errorWidget ?? const Icon(Icons.error);
   }
 
   /// Build image from file
-  Widget _buildFileImage(double? width, double? height) {
+  Widget _buildFileImage(File file, double? width, double? height) {
     return Image.file(
-      file!,
+      file,
       width: width,
       height: height,
       fit: fit,
@@ -184,7 +188,7 @@ class ImageBuilder extends StatelessWidget {
       errorBuilder: (context, error, stackTrace) {
         try {
           _logger.error(
-            'Failed to load file image: ${file!.path}',
+            'Failed to load file image: ${file.path}',
             tag: 'ImageBuilder',
             error: error,
             stackTrace: null, // Avoid generating stack trace in error handlers
@@ -198,9 +202,9 @@ class ImageBuilder extends StatelessWidget {
   }
 
   /// Build image from memory bytes
-  Widget _buildMemoryImage(double? width, double? height) {
+  Widget _buildMemoryImage(Uint8List bytes, double? width, double? height) {
     return Image.memory(
-      bytes!,
+      bytes,
       width: width,
       height: height,
       fit: fit,

@@ -27,7 +27,7 @@ void main() {
       // Create ImageBuilder widget with file constructor
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: ImageBuilder.file(
+          body: ImageBuilder(
             testFile,
             width: 100,
             height: 100,
@@ -67,7 +67,7 @@ void main() {
       // Create ImageBuilder widget with memory constructor
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: ImageBuilder.memory(
+          body: ImageBuilder(
             pngBytes,
             width: 100,
             height: 100,
@@ -96,7 +96,7 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: ImageBuilder.file(
+          body: ImageBuilder(
             nonExistentFile,
             width: 100,
             height: 100,
@@ -131,7 +131,7 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: ImageBuilder.memory(
+          body: ImageBuilder(
             corruptedBytes,
             width: 100,
             height: 100,
@@ -155,34 +155,27 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    /// Test that different constructors have proper parameter isolation.
+    /// Test that different source types are handled correctly.
     ///
-    /// This test verifies that the different constructors (path, file, memory)
-    /// properly isolate their parameters and don't interfere with each other.
-    testWidgets('should isolate constructor parameters properly',
-        (tester) async {
+    /// This test verifies that the ImageBuilder constructor
+    /// accepts different source types (String, File, Uint8List).
+    testWidgets('should accept different source types', (tester) async {
       final testBytes =
           Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]); // PNG header
 
-      // Test that memory constructor has null path and file
-      final memoryWidget = ImageBuilder.memory(testBytes);
-      expect(memoryWidget.path, isNull);
-      expect(memoryWidget.file, isNull);
-      expect(memoryWidget.bytes, equals(testBytes));
+      // Test that memory source is accepted
+      final memoryWidget = ImageBuilder(testBytes);
+      expect(memoryWidget.source, equals(testBytes));
 
-      // Test that file constructor has null path and bytes
+      // Test that file source is accepted
       final testFile = File('/test/path.png');
-      final fileWidget = ImageBuilder.file(testFile);
-      expect(fileWidget.path, isNull);
-      expect(fileWidget.bytes, isNull);
-      expect(fileWidget.file, equals(testFile));
+      final fileWidget = ImageBuilder(testFile);
+      expect(fileWidget.source, equals(testFile));
 
-      // Test that path constructor has null file and bytes
+      // Test that path source is accepted
       const testPath = 'assets/test.png';
       const pathWidget = ImageBuilder(testPath);
-      expect(pathWidget.file, isNull);
-      expect(pathWidget.bytes, isNull);
-      expect(pathWidget.path, equals(testPath));
+      expect(pathWidget.source, equals(testPath));
     });
   });
 }

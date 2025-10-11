@@ -25,7 +25,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  image_builder: ^1.1.1
+  image_builder: ^1.2.0
 ```
 
 Then run:
@@ -88,7 +88,7 @@ import 'dart:io';
 
 // Display image from device file
 final File imageFile = File('/path/to/image.jpg');
-ImageBuilder.file(
+ImageBuilder(
   imageFile,
   width: 200,
   height: 150,
@@ -103,7 +103,7 @@ import 'dart:typed_data';
 
 // Display image from memory bytes
 final Uint8List imageBytes = await getImageBytes();
-ImageBuilder.memory(
+ImageBuilder(
   imageBytes,
   width: 200,
   height: 150,
@@ -238,7 +238,7 @@ class ImageGallery extends StatelessWidget {
             SizedBox(height: 20),
             
             // File image
-            ImageBuilder.file(
+            ImageBuilder(
               File('/path/to/device/image.jpg'),
               width: 200,
               height: 150,
@@ -248,7 +248,7 @@ class ImageGallery extends StatelessWidget {
             SizedBox(height: 20),
             
             // Memory image
-            ImageBuilder.memory(
+            ImageBuilder(
               imageBytes, // Uint8List
               width: 200,
               height: 150,
@@ -269,7 +269,7 @@ The package includes a comprehensive example app that demonstrates all features 
 - **Gallery Selection**: Pick images from your device's photo library
 - **Camera Capture**: Take new photos directly from the camera
 - **Cross-Platform**: Works on iOS, Android, macOS, and other Flutter-supported platforms
-- **Real-time Preview**: See ImageBuilder.file() in action with your own images
+- **Real-time Preview**: See ImageBuilder in action with your own images
 
 To run the example app:
 
@@ -282,15 +282,15 @@ The example app showcases:
 - Network image loading with adaptive indicators
 - SVG rendering with color customization  
 - Memory image display from asset bytes (using `photo.jpg`)
-- **Cross-platform file picker** using ImageBuilder.file() (works on Mobile, Desktop & Web)
-- **Device image upload** using ImageBuilder.file() (gallery/camera selection for mobile)
+- **Cross-platform file picker** (works on Mobile, Desktop & Web)
+- **Device image upload** (gallery/camera selection for mobile)
 - Error handling and fallback widgets
 - All supported image formats
 
 **Platform Support**:
-- **Mobile (iOS/Android)**: Gallery selection using ImageBuilder.file()
-- **Desktop (macOS/Windows/Linux)**: Native file picker using ImageBuilder.file()
-- **Web**: File selection with automatic fallback to ImageBuilder.memory()
+- **Mobile (iOS/Android)**: Gallery selection with device files
+- **Desktop (macOS/Windows/Linux)**: Native file picker with local files
+- **Web**: File selection with automatic fallback to memory bytes
 
 **Smart Platform Detection**: The example app automatically shows the appropriate UI based on your platform - file picker on desktop/web or gallery selection on mobile.
 
@@ -298,14 +298,14 @@ Perfect for testing the package capabilities and understanding implementation pa
 
 ## 📖 API Reference
 
-### ImageBuilder Constructors
+### ImageBuilder Constructor
 
-The ImageBuilder widget provides multiple constructors for different image sources.
+The ImageBuilder widget provides a single unified constructor that accepts different image sources.
 
-#### Default Constructor (Path-based)
+#### Constructor (Recommended)
 ```dart
 ImageBuilder(
-  String path, {
+  Object source, {
   Key? key,
   double? width,
   double? height,
@@ -321,51 +321,30 @@ ImageBuilder(
 })
 ```
 
-#### File Constructor
-```dart
-ImageBuilder.file(
-  File file, {
-  Key? key,
-  double? width,
-  double? height,
-  double? size,
-  Color? color,
-  BoxFit fit = BoxFit.contain,
-  Widget? placeholder,
-  Widget? errorWidget,
-  Duration? maxCacheAge,
-  int? maxCacheSizeBytes,
-  bool useAdaptiveLoading = true,
-  Color? loadingColor,
-})
-```
+The `source` parameter accepts:
+- **String**: Network URL, asset path, or local file path
+- **File**: Device file object (from dart:io)
+- **Uint8List**: Image data as bytes in memory
 
-#### Memory Constructor
+#### Deprecated Constructors
+
+> ⚠️ **Note**: `ImageBuilder.file()` and `ImageBuilder.memory()` are deprecated as of v1.2.0 and will be removed in v2.0.0. Please use the unified constructor `ImageBuilder()` instead.
+
 ```dart
-ImageBuilder.memory(
-  Uint8List bytes, {
-  Key? key,
-  double? width,
-  double? height,
-  double? size,
-  Color? color,
-  BoxFit fit = BoxFit.contain,
-  Widget? placeholder,
-  Widget? errorWidget,
-  Duration? maxCacheAge,
-  int? maxCacheSizeBytes,
-  bool useAdaptiveLoading = true,
-  Color? loadingColor,
-})
+// ❌ Deprecated (still works but shows warnings)
+ImageBuilder.file(myFile, ...)
+ImageBuilder.memory(myBytes, ...)
+
+// ✅ Recommended (new way)
+ImageBuilder(myFile, ...)
+ImageBuilder(myBytes, ...)
 ```
 
 ### Parameters
 
 | Parameter | Type | Description | Default |
 |-----------|------|-------------|---------|
-| `path` | `String` | **Required for default constructor.** Image path or URL (network, asset, or local) | - |
-| `file` | `File` | **Required for file constructor.** File object to load image from | - |
-| `bytes` | `Uint8List` | **Required for memory constructor.** Image data as bytes | - |
+| `source` | `Object` | **Required.** Image source - can be String (path/URL), File object, or Uint8List (bytes) | - |
 | `width` | `double?` | Image width in logical pixels (ignored if `size` provided) | `null` |
 | `height` | `double?` | Image height in logical pixels (ignored if `size` provided) | `null` |
 | `size` | `double?` | Sets both width and height to same value | `null` |

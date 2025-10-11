@@ -1,6 +1,6 @@
 name: image_builder
 description: A comprehensive Flutter package for handling network images, SVGs, local assets, file images, and memory images with caching and error handling.
-version: 1.1.4
+version: 1.2.0
 homepage: https://github.com/MAHMOUDELSAYED7/Image-Builder
 repository: https://github.com/MAHMOUDELSAYED7/Image-Builder
 
